@@ -11,6 +11,7 @@ export class UserService {
       {id:3,name:"Sergio",email:"sh@zyos.co"}
     ]; 
   constructor() { 
+    this.init();
   }
 
   init(){
