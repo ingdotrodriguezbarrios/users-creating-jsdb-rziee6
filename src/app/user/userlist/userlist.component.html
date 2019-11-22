@@ -16,7 +16,7 @@
         <td>{{user.email}}</td>
         <td><a [routerLink]="['/user', user.id]"><fa-icon [icon]="['fas', 'search']"></fa-icon></a></td>
         <td><a [routerLink]="['/userAdd', user.id]"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a></td>
-        <td><a><fa-icon [icon]="['fas', 'trash']"></fa-icon></a></td>
+        <td><a (click)="goDelete(user.id)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a></td>
       </tr>
     </tbody>
   </table>

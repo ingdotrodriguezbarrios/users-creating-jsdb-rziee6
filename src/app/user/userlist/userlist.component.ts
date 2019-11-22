@@ -10,6 +10,7 @@ import { User } from './../../model/user';
 })
 export class UserlistComponent implements OnInit {
   userList : User[];
+  idUserDeleting:number;
   
   constructor(private route: ActivatedRoute, private userService:UserService) { }
 
@@ -20,5 +21,9 @@ export class UserlistComponent implements OnInit {
       if(addingResult === 'success')
         alert('Usuario añadido correctamente');
     });
+  }
+
+  goDelete(idUserDeleting) {
+    this.idUserDeleting = idUserDeleting;
   }
 }

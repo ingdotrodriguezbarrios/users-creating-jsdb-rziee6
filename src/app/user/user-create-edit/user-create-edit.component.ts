@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder,FormControl,FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UserService } from './../../services/user.service';
 import { User } from './../../model/user';
 
@@ -12,20 +13,31 @@ import { User } from './../../model/user';
 })
 export class UserCreateEditComponent implements OnInit {
   userCreationForm;
+  adding = true;
   constructor(private route: ActivatedRoute,private userService:UserService, private formBuilder: FormBuilder,private router: Router) { 
-    this.userCreationForm = this.formBuilder.group({
-      id:0,
-      name:'',
-      email:''
+    this.userCreationForm = new FormGroup({
+      id: new FormControl({value:0}),
+      name: new FormControl({value:''}),
+      email: new FormControl({value:''})
     });
   }
 
   ngOnInit() {
-
+    this.route.paramMap.subscribe(async params => {
+      let user = await this.userService.get(+params.get('userId'));
+      if(user){
+        this.userCreationForm = new FormGroup({
+          id: new FormControl({value: user.id, disabled: false}),
+          name: new FormControl({value: user.name, disabled:false}),
+          email: new FormControl({value: user.email, disabled:false})
+        });
+        this.adding = false;
+      }
+    });
   }
 
   async onSubmit(user : User){
-    let response :string = await this.userService.add(user);
+    let response :string = this.adding? await this.userService.add(user):await this.userService.update(user);
     if(response === "success"){
       this.router.navigate(['/'],{queryParams:{addingResult:"success"}});
     } else {

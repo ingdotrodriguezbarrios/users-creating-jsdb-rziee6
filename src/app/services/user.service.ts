@@ -103,8 +103,32 @@ export class UserService {
         let target : IDBOpenDBRequest = <IDBOpenDBRequest>event.target;
         let db : IDBDatabase = target.result;
         let objectStorage = db.transaction(UserService.OBJECT_STORAGE_NAME,"readwrite").objectStore(UserService.OBJECT_STORAGE_NAME);
-        let userList : User[] = [];
         let request = objectStorage.add(user);
+        request.onerror = function(ev){
+          reject(new Error("Error saving user "+ev));
+        }
+        request.onsuccess = function(ev){
+          let target :IDBRequest= <IDBRequest>ev.target;
+          console.log(target.result);
+          resolve("success");
+        }
+      }
+    });
+  }
+
+  update(user : User):Promise<string>{
+    let request : IDBOpenDBRequest = indexedDB.open(UserService.DB_NAME,10);
+
+    return new Promise((resolve,reject)=>{
+      request.onerror = function(event){
+        reject(new Error("Error opening database "+event));
+      }
+      request.onsuccess = function(event){
+        let target : IDBOpenDBRequest = <IDBOpenDBRequest>event.target;
+        let db : IDBDatabase = target.result;
+        let objectStorage = db.transaction(UserService.OBJECT_STORAGE_NAME,"readwrite").objectStore(UserService.OBJECT_STORAGE_NAME);
+        let userList : User[] = [];
+        let request = objectStorage.put(user);
         request.onerror = function(ev){
           reject(new Error("Error saving user "+ev));
         }
