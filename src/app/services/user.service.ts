@@ -79,7 +79,6 @@ export class UserService {
         let target : IDBOpenDBRequest = <IDBOpenDBRequest>event.target;
         let db : IDBDatabase = target.result;
         let objectStorage = db.transaction(UserService.OBJECT_STORAGE_NAME).objectStore(UserService.OBJECT_STORAGE_NAME);
-        let userList : User[] = [];
         let request = objectStorage.get(id);
         request.onerror = function(ev){
           reject(new Error("Error opening cursor "+ev));
@@ -135,6 +134,28 @@ export class UserService {
         request.onsuccess = function(ev){
           let target :IDBRequest= <IDBRequest>ev.target;
           console.log(target.result);
+          resolve("success");
+        }
+      }
+    });
+  }
+
+  delete(id : number):Promise<string>{
+    let request : IDBOpenDBRequest = indexedDB.open(UserService.DB_NAME,10);
+
+    return new Promise((resolve,reject)=>{
+      request.onerror = function(event){
+        reject(new Error("Error opening database "+event));
+      }
+      request.onsuccess = function(event){
+        let target : IDBOpenDBRequest = <IDBOpenDBRequest>event.target;
+        let db : IDBDatabase = target.result;
+        let objectStorage = db.transaction(UserService.OBJECT_STORAGE_NAME,"readwrite").objectStore(UserService.OBJECT_STORAGE_NAME);
+        let request = objectStorage.delete(id);
+        request.onerror = function(ev){
+          reject(new Error("Error saving user "+ev));
+        }
+        request.onsuccess = function(ev){
           resolve("success");
         }
       }

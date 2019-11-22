@@ -10,7 +10,6 @@ import { User } from './../../model/user';
 })
 export class UserlistComponent implements OnInit {
   userList : User[];
-  idUserDeleting:number;
   
   constructor(private route: ActivatedRoute, private userService:UserService) { }
 
@@ -19,11 +18,17 @@ export class UserlistComponent implements OnInit {
     this.route.queryParamMap.subscribe( params => {
       let addingResult = params.get('addingResult');
       if(addingResult === 'success')
-        alert('Usuario añadido correctamente');
+        alert('Usuario guardado correctamente');
     });
   }
 
-  goDelete(idUserDeleting) {
-    this.idUserDeleting = idUserDeleting;
+  async delete(idUserDeleting) {
+    if(confirm("Está segunro de eliminar este usuario")){
+      let result = await this.userService.delete(idUserDeleting);
+      if(result === 'success'){
+        alert('Usuario eliminado correctamente');
+        this.userList = await this.userService.loadUserList();
+      }
+    }
   }
 }
