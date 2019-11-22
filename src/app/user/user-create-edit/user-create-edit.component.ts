@@ -10,9 +10,9 @@ import { User } from './../../model/user';
   templateUrl: './user-create-edit.component.html',
   styleUrls: ['./user-create-edit.component.css']
 })
-export class UserCreateEditComponent {
+export class UserCreateEditComponent implements OnInit {
   userCreationForm;
-  constructor(private userService:UserService, private formBuilder: FormBuilder,private router: Router) { 
+  constructor(private route: ActivatedRoute,private userService:UserService, private formBuilder: FormBuilder,private router: Router) { 
     this.userCreationForm = this.formBuilder.group({
       id:0,
       name:'',
@@ -20,10 +20,14 @@ export class UserCreateEditComponent {
     });
   }
 
+  ngOnInit() {
+
+  }
+
   async onSubmit(user : User){
-    let response :string = await this.userService.add();
+    let response :string = await this.userService.add(user);
     if(response === "success"){
-      this.router.navigate(['/','success'])
+      this.router.navigate(['/'],{queryParams:{addingResult:"success"}});
     } else {
       this.showError();
     }

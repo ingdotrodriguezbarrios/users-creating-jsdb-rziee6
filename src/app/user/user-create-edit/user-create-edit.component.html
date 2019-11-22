@@ -2,7 +2,7 @@
 <button routerLink="/" class="btn btn-secondary btn-sm float-right" >Volver</button>
 <h3>Crear usuario</h3>
 <hr/>
-<form [formGroup]="userCreationForm" (ngSubmit)="await onSubmit(userCreationForm.value)">
+<form [formGroup]="userCreationForm" (ngSubmit)="onSubmit(userCreationForm.value)">
   <div class="form-group">
     <label for="name">
       Id
@@ -19,7 +19,7 @@
     <label for="email">
       E-mail
     </label>
-    <input id="email" type="email" class="form-control" formControlName="address">
+    <input id="email" type="email" class="form-control" formControlName="email">
   </div>
-  <button class="btn btn-primary btn-sm" type="submit">Purchase</button>
+  <button class="btn btn-primary btn-sm" type="submit">Crear Usuario</button>
 </form>
